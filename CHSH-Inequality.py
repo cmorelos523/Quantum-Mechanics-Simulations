@@ -49,3 +49,18 @@ def create_cat():
     circ.h(0)
     circ.cx(0, 1)
     return circ
+
+# Helper function to compute the expectation value from measurement counts.
+# For each 2-bit outcome, we assign +1 if the bit is 0 and -1 if 1.
+# The product of the outcomes for qubits 0 and 1 is computed, so that:
+# '00' or '11' → +1, and '01' or '10' → -1.
+def expectation(counts, shots):
+    # Using the fact that (counts['00']+counts['11'] - counts['01']-counts['10'])/shots is the expectation.
+    exp_val = (counts.get('00', 0) + counts.get('11', 0) - counts.get('01', 0) - counts.get('10', 0))
+    return exp_val / shots
+
+# Set number of shots and create lists for circuits, labels, and functions
+shots = 1024
+circuits = []
+labels = ["XW", "XV", "ZW", "ZV"]
+transformation_functions = [XW, XV, ZW, ZV]
