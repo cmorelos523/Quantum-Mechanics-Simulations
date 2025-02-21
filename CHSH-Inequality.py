@@ -64,3 +64,19 @@ shots = 1024
 circuits = []
 labels = ["XW", "XV", "ZW", "ZV"]
 transformation_functions = [XW, XV, ZW, ZV]
+
+# Build the circuits for each measurement setting.
+for func in transformation_functions:
+    qc = create_cat()  # create the entangled state
+    func(qc, 0, 1)     # apply the measurement transformation for the particular observable
+    qc.measure_all()   # measure both qubits in the computational (Z) basis
+    circuits.append(qc)
+
+# Use the Qiskit Aer simulator.
+backend = Aer.get_backend('qasm_simulator')
+
+# Instead of using the deprecated execute() function,
+# we transpile the circuits for the backend and then run them.
+transpiled_circuits = transpile(circuits, backend)
+job = backend.run(transpiled_circuits, shots=shots)
+results = job.result()
