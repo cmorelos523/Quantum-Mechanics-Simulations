@@ -26,3 +26,11 @@ def XV(circ, qbit0, qbit1):
     circ.h(qbit1)
     circ.tdg(qbit1)
     circ.h(qbit1)
+
+def ZW(circ, qbit0, qbit1):
+    # Qubit 0: Z measurement is the default (do nothing)
+    # Qubit 1: W measurement -> convert to Z using S, H, T, H
+    circ.s(qbit1)
+    circ.h(qbit1)
+    circ.t(qbit1)
+    circ.h(qbit1)
