@@ -80,3 +80,26 @@ backend = Aer.get_backend('qasm_simulator')
 transpiled_circuits = transpile(circuits, backend)
 job = backend.run(transpiled_circuits, shots=shots)
 results = job.result()
+
+# Extract counts and compute expectation values
+expectations = []
+for label, qc in zip(labels, circuits):
+    counts = results.get_counts(qc)
+    exp_val = expectation(counts, shots)
+    expectations.append(exp_val)
+    print(f"Expectation for {label}: {exp_val}")
+
+# Compute the CHSH correlation parameter:
+# C_quantum = ⟨XW⟩ - ⟨XV⟩ + ⟨ZW⟩ + ⟨ZV⟩
+C_quantum = expectations[0] - expectations[1] + expectations[2] + expectations[3]
+print("C_quantum =", C_quantum)
+print("|C_quantum| =", abs(C_quantum))
+
+# Plot histograms of measurement counts in a 2x2 grid
+fig, axs = plt.subplots(2, 2, figsize=(10, 8))
+for i, qc in enumerate(circuits):
+    counts = results.get_counts(qc)
+    ax = axs[i // 2, i % 2]
+    plot_histogram(counts, ax=ax, title=labels[i])
+plt.tight_layout()
+plt.show()
