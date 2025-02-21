@@ -17,3 +17,12 @@ def XW(circ, qbit0, qbit1):
     circ.h(qbit1)
     circ.t(qbit1)
     circ.h(qbit1)
+
+def XV(circ, qbit0, qbit1):
+    # Qubit 0: X measurement -> convert to Z
+    circ.h(qbit0)
+    # Qubit 1: V measurement -> convert to Z using S, H, T†, H
+    circ.s(qbit1)
+    circ.h(qbit1)
+    circ.tdg(qbit1)
+    circ.h(qbit1)
